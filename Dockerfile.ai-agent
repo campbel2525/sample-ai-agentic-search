@@ -1,0 +1,37 @@
+# 使用するNode.jsのバージョンを指定
+FROM node:24-slim
+
+# インストール
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    vim-tiny \
+    bash \
+    ca-certificates \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# 環境変数
+ENV NODE_ENV=development
+
+# アプリケーションのディレクトリを設定
+WORKDIR /project
+
+# /project を node ユーザーが書き込めるようにする
+RUN chown -R node:node /project
+
+# npm / codex は root でグローバルインストール（/usr/local/bin で全ユーザーから使える）
+# これを行う理由としては、Claude Code cliの実行の際にいちいちコマンドの強化を求められるのがうざいため
+# claude --dangerously-skip-permissions
+# 実行したい。しかしrootユーザーでは
+# claude --dangerously-skip-permissions
+# は使えないためnodeユーザーでclaude codeを実行することにする
+RUN npm install -g npm@11.8.0 \
+    && npm install -g @openai/codex@0.98.0
+
+# ここから node ユーザーで Claude を入れる（root だと --dangerously-skip-permissions が使えないため）
+USER node
+
+# Claude Code は通常 ~/.local/bin に入るので PATH を通す（node の home は /home/node）
+ENV PATH="/home/node/.local/bin:${PATH}"
+
+# ネイティブインストール（安定版がデフォルト）
+RUN curl -fsSL https://claude.ai/install.sh | bash

@@ -1,0 +1,28 @@
+services:
+  # ---------------------------------
+  # ai-agent
+  # ---------------------------------
+  ai-agent:
+    build:
+      context: .
+      dockerfile: Dockerfile.ai-agent
+    restart: "no"
+    tty: true
+    volumes:
+      - ./project:/project
+      - codex-data:/home/dev/.codex
+      - claude-data:/home/dev/.claude
+      - ./settings/codex/AGENTS.md:/home/dev/.codex/AGENTS.md
+      - ./settings/codex/config.toml:/home/dev/.codex/config.toml
+      - ./settings/claude/settings.json:/home/dev/.claude/settings.json
+      # もしcodex、claudeのデータをローカルに保存したい場合は
+      #   - 上記のvolumesの内容をすべてコメントアウト
+      #   - volumesの削除
+      #   - 以下のコメントアウトを外す
+      # - ./project:/project
+      # - ./settings/codex:/home/dev/.codex
+      # - ./settings/claude:/home/dev/.claude
+
+volumes:
+  codex-data:
+  claude-data:

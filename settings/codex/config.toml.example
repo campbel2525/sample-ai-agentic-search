@@ -1,0 +1,7 @@
+model = "gpt-5.2"
+model_reasoning_effort = "xhigh"
+approval_policy = "never"
+sandbox_mode    = "workspace-write"
+[mcp_servers.playwright]
+command = "npx"
+args = ["@playwright/mcp@latest", "--browser", "chrome", "--executable-path", "/ms-playwright/chromium-1200/chrome-linux/chrome", "--no-sandbox"]

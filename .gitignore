@@ -1,0 +1,11 @@
+.DS_Store
+
+# ignore directories
+settings/.claude/*
+settings/.codex/*
+project/CLAUDE.md
+
+# keep specific files
+!settings/.claude/settings.json.example
+!settings/.codex/AGENTS.md.example
+!settings/.codex/config.toml.example
